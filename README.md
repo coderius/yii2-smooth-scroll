@@ -12,6 +12,10 @@ Either run
 ```
 php composer.phar require coderius/yii2-smooth-scroll "@dev"
 ```
+or
+```
+composer require coderius/yii2-smooth-scroll "@dev"
+```
 
 or add
 
@@ -25,7 +29,7 @@ Basic usage.
 ------------
 * In view include widget:
 
-By default 'a[href*="#"]' passing in a selector for the anchor links that should be animated.
+By default selector 'a[href*="#"]' passed in for the anchor links that should be animated.
 
 ```php
 <?php echo coderius\smoothScroll\SmoothScroll::widget([]); ?>
@@ -38,4 +42,4 @@ And set html link and anchor to scroll:
 
 ```
 
-Reference to js plugin and more settings find in [github](https://github.com/cferdinandi/smooth-scroll)author repository that is used in this widget.
+Reference to js plugin and more settings find in [github](https://github.com/cferdinandi/smooth-scroll) author repository that is used in this widget.
