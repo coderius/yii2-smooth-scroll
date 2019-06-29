@@ -21,5 +21,21 @@ or add
 
 to the require section of your application's `composer.json` file.
 
+Basic usage.
+------------
+* In view include widget:
+
+By default 'a[href*="#"]' passing in a selector for the anchor links that should be animated.
+
+```php
+<?php echo coderius\smoothScroll\SmoothScroll::widget([]); ?>
+```
+And set html link and anchor to scroll:
+```html
+<a href="#your-anchor-name">tuc</a>
+...
+<div id="your-anchor-name"></div>
+
+```
 
 Reference to js plugin and more settings find in [github](https://github.com/cferdinandi/smooth-scroll)author repository that is used in this widget.
