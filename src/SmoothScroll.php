@@ -24,6 +24,17 @@ class SmoothScroll extends Widget
      */
     public $clientOptions = [];
     
+    public $selector;
+
+    public function init()
+    {
+        parent::init();
+
+        if ($this->selector === null) {
+            $this->selector = 'a[href*="#"]';
+        }
+    }
+
     /**
      * @inheritdoc
      */
@@ -40,6 +51,10 @@ class SmoothScroll extends Widget
         $js = [];
         $view = $this->getView();
         SmoothScrollAsset::register($view);
-        var_dump($this->getId());
+        // var_dump($this->getId());
+        $options = Json::encode($this->clientOptions);
+        $js[] = "var scroll = new SmoothScroll('$this->selector', $options);";
+        
+        $view->registerJs(implode("\n", $js));
     }
 }
