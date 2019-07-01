@@ -42,4 +42,67 @@ And set html link and anchor to scroll:
 
 ```
 
+Advansed usage.
+---------------
+```php
+<?php 
+    echo coderius\smoothScroll\SmoothScroll::widget([
+        // 'selector' => false,
+        'clientOptions' => [
+            'speed' => '1500',
+            'speedAsDuration' => true,
+            'easing' => 'easeInQuint',
+            'customEasing' => new \yii\web\JsExpression(
+                'function (time) {
+                    return time < 0.5 ? 2 * time * time : -1 + (4 - 2 * time) * time;
+                }'
+            ),
+            'clip' => true,
+            // History
+            'updateURL' => true, // Update the URL on scroll
+	        'popstate' => true, // Animate scrolling with the forward/backward browser buttons (requires updateURL to be true)
+            // Custom Events
+	        'emitEvents' => true // Emit custom events
+        ],
+        'clientMethods' => [
+            // Animate scrolling to an anchor.
+            'animateScroll' => [
+                'anchor' => "document.querySelector('#tuc')",// numbel (y-position to scroll) or dom element
+                // 'toggle' => 700,
+                'options' => "{ speed: 1500, easing: 'easeOutCubic' }",
+            ],
+            'cancelScroll' => false,
+            'destroy' => false,
+        ],
+        'beginClientJs' => function($self){
+            $script = "var logScrollEvent = function (event) {
+
+                // The event type
+                console.log('type:', event.type);
+            
+                // The anchor element being scrolled to
+                console.log('anchor:', event.detail.anchor);
+            
+                // The anchor link that triggered the scroll
+                console.log('toggle:', event.detail.toggle);
+            
+            };";
+
+            return $script;
+        },
+        'endClientJs' => function($self){
+            $script = "console.log(" . $self->getScrollVarName() . ")";
+
+            return $script;
+        },
+        'clientEvents' => [
+            'scrollStart' => ['logScrollEvent', false],
+            'scrollStop' => ['logScrollEvent', false],
+            'scrollCancel' => ['logScrollEvent', false],
+        ],
+    ]); 
+?>
+```
+
+
 Reference to js plugin and more settings find in [github](https://github.com/cferdinandi/smooth-scroll) author repository that is used in this widget.
