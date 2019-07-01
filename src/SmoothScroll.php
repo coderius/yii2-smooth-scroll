@@ -19,21 +19,67 @@ use yii\base\InvalidParamException;
 
 class SmoothScroll extends Widget
 {
-   /**
+    /**
      * @var array the options for the Smooth Scroll JS plugin.
      * Please refer to the Smooth Scroll JS plugin Web page for possible options.
      * @see https://github.com/cferdinandi/smooth-scroll
      */
     public $clientOptions = [];
     
+    /**
+     * Undocumented variable
+     *
+     * @var array
+     */
     public $clientMethods = [];
 
+    /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    public $clientEvents = [];
+
+    /**
+     * Undocumented variable
+     *
+     * @var boolean
+     */
+    public $beginClientJs = false;
+
+    /**
+     * Undocumented variable
+     *
+     * @var boolean
+     */
+    public $endClientJs = false;
+
+    /**
+     * Undocumented variable
+     *
+     * @var [type]
+     */
     public $selector;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string
+     */
     private $scrollVarName = 'scroll';
 
+    /**
+     * Undocumented variable
+     *
+     * @var string
+     */
     private $pluginName = 'SmoothScroll';
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function init()
     {
         parent::init();
@@ -59,25 +105,38 @@ class SmoothScroll extends Widget
         $js = [];
         $view = $this->getView();
         SmoothScrollAsset::register($view);
-        // var_dump($this->getId());
-        $options = Json::encode($this->clientOptions);
-        
         // \yii\helpers\Json::htmlEncode($var)
-        $js[] = "var $this->scrollVarName = new SmoothScroll('$this->selector', $options);";
-        
-        $view->registerJs(implode("\n", $js));
+        $js[] = $this->registerBeginClientJs();
+        $js[] = $this->registerClientObject();
+        $js[] = $this->registerClientMethods();
+        $js[] = $this->registerEndClientJs();
+        $js[] = $this->registerClientEvents();
 
-        $this->registerClientMethods();
-        
+       $view->registerJs(implode("\n", array_filter($js)));
+        var_dump(implode("\n", $js));
     }
 
-    protected function registerClientMethods()
+    private function registerClientObject()
+    {
+        $options = Json::encode($this->clientOptions);
+        $script = "var $this->scrollVarName = new SmoothScroll('$this->selector', $options);";
+        return $script;
+    }    
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    private function registerClientMethods()
     {
         $allowMethods = [
             'animateScroll', 
             'cancelScroll', 
             'destroy'
         ];
+
+        $script = "";
 
         if(!empty($this->clientMethods)){
             foreach($this->clientMethods as $method => $value){
@@ -87,29 +146,38 @@ class SmoothScroll extends Widget
 
                 switch ($method) {
                     case 'animateScroll' :
-                        $this->animateScrollSmoothScroll($value);
+                        $script .= $this->animateScrollSmoothScroll($value);
                     break;
 
                     case 'cancelScroll' :
-                        $this->cancelScrollSmoothScroll($value);
+                        $script .= $this->cancelScrollSmoothScroll($value);
                     break;
 
                     case 'destroy' :
-                       $this->destroySmoothScroll($value);
+                        $script .= $this->destroySmoothScroll($value);
                     break;
                 }
             }
         }
-        return;
+
+        return $script;
     }
     
+    /**
+     * Undocumented function
+     *
+     * @param [type] $value
+     * @return void
+     */
     private function animateScrollSmoothScroll($value)
     {
         $allowParams = [
-            'anchor',
-            'toggle',
-            'options',
+            'anchor' => false,
+            'toggle' => false,
+            'options' => false,
         ];
+
+        $script = "";
 
         if(!is_array($value)){
             throw new InvalidParamException("Invalid Parameter in ". __METHOD__ ." 'value' should be an array");
@@ -117,18 +185,29 @@ class SmoothScroll extends Widget
 
         if(!empty($value)){
             foreach($value as $param => $data){
-                if(!in_array($param, $allowParams)){
-                    throw new InvalidConfigException("Param cannot be allowed.");
+                if(!array_key_exists($param, $allowParams)){
+                    throw new InvalidConfigException("This param '$param' not supported.");
                 }
             }
-            extract($value);
-            return "$this->scrollVarName.animateScroll($anchor, $toggle, $options);";
+            $args= array_filter(array_merge($allowParams, $value));
+
+            $script .= "$this->scrollVarName.animateScroll(";
+            $script .= implode(",", $args);
+            $script .= ");";
+            
+            return $script;
         }
         
-        return;
+        return null;
         
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param [type] $value
+     * @return boolean
+     */
     private function cancelScrollSmoothScroll($value)
     {
         if (is_bool($value) === false) {
@@ -138,6 +217,12 @@ class SmoothScroll extends Widget
         return $value ? "$this->scrollVarName.cancelScroll();" : "";
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param [type] $value
+     * @return void
+     */
     private function destroySmoothScroll($value)
     {
         if (is_bool($value) === false) {
@@ -147,4 +232,78 @@ class SmoothScroll extends Widget
         return $value ? "$this->scrollVarName.destroy();" : "";
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    private function registerClientEvents()
+    {
+        $allowEvents = [
+            'scrollStart', 
+            'scrollStop', 
+            'scrollCancel'
+        ];
+
+        $script = "";
+
+        if(!empty($this->clientEvents)){
+            foreach($this->clientEvents as $event => $params){
+                if(!in_array($event, $allowEvents)){
+                    throw new InvalidConfigException("Event $event cannot be allowed.");
+                }
+
+                $args = implode(",", $params);
+
+                $script .= "document.addEventListener('$event', $args);";
+                    
+            }
+        }
+
+        return $script;
+    }
+    
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    private function registerBeginClientJs()
+    {
+        $js = false;
+        if ($this->beginClientJs instanceof Closure) {
+            $js = call_user_func($this->beginClientJs, $this);
+        } 
+        return $js;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    private function registerEndClientJs()
+    {
+        $js = false;
+        if ($this->endClientJs instanceof Closure) {
+            $js = call_user_func($this->endClientJs, $this);
+        } 
+        return $js;
+    }
+    
+    /**
+     * Get the value of scrollVarName
+     */ 
+    public function getScrollVarName()
+    {
+        return $this->scrollVarName;
+    }
+
+    /**
+     * Get the value of pluginName
+     */ 
+    public function getPluginName()
+    {
+        return $this->pluginName;
+    }
 }
