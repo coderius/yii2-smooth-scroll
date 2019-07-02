@@ -44,6 +44,9 @@ And set html link and anchor to scroll:
 
 Advansed usage.
 ---------------
+
+In section 'beginClientJs' and 'endClientJs' you can set any js code. 
+
 ```php
 <?php 
     echo coderius\smoothScroll\SmoothScroll::widget([
@@ -74,6 +77,7 @@ Advansed usage.
             'cancelScroll' => false,
             'destroy' => false,
         ],
+        //$self in is widget object
         'beginClientJs' => function($self){
             $script = "var logScrollEvent = function (event) {
 
@@ -95,6 +99,15 @@ Advansed usage.
 
             return $script;
         },
+        
+        /**
+        * This script will be generated if you specify the elements of the array 
+        * as in the example below.
+        *
+        * document.addEventListener('scrollStart', logScrollEvent, false);
+        * document.addEventListener('scrollStop', logScrollEvent, false);
+        * document.addEventListener('scrollCancel', logScrollEvent, false);
+        **/
         'clientEvents' => [
             'scrollStart' => ['logScrollEvent', false],
             'scrollStop' => ['logScrollEvent', false],
