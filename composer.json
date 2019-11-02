@@ -16,7 +16,7 @@
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0.10",
-        "npm-asset/smooth-scroll": "*"
+        "npm-asset/smooth-scroll": "~16.0"
         
     },
     "require-dev": {
