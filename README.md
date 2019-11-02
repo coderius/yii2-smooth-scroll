@@ -10,20 +10,20 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require coderius/yii2-smooth-scroll "@dev"
+php composer.phar require coderius/yii2-smooth-scroll
 ```
 or
 ```
-composer require coderius/yii2-smooth-scroll "@dev"
+composer require coderius/yii2-smooth-scroll
 ```
 
 or add
 
 ```json
-"coderius/yii2-smooth-scroll" : "@dev"
+"coderius/yii2-smooth-scroll" : "*"
 ```
-
 to the require section of your application's `composer.json` file.
+And run ```composer update```
 
 Basic usage.
 ------------
@@ -36,7 +36,7 @@ By default selector 'a[href*="#"]' passed in for the anchor links that should be
 ```
 And set html link and anchor to scroll:
 ```html
-<a href="#your-anchor-name">tuc</a>
+<a href="#your-anchor-name">Text</a>
 ...
 <div id="your-anchor-name"></div>
 
