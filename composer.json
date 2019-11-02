@@ -4,6 +4,7 @@
     "keywords": ["widget", "Smooth Scroll", "yii2", "yii2-smooth-scroll"],
     "type": "yii2-extension",
     "license": "MIT",
+    "homepage": "https://github.com/coderius/yii2-smooth-scroll",
     "authors": [
         {
             "name": "Serg Coderius",
@@ -14,9 +15,9 @@
     ],
     
     "require": {
-        "php": ">=5.4.0",
-        "yiisoft/yii2": "~2.0.10",
-        "npm-asset/smooth-scroll": "~16.0"
+        "php": ">=5.6.0",
+        "yiisoft/yii2": "~2.0.14",
+        "npm-asset/smooth-scroll": "*"
         
     },
     "require-dev": {
@@ -27,17 +28,18 @@
             "coderius\\smoothScroll\\": "src/"
         }
     },
+    "config": {
+        "fxp-asset": {
+            "installer-paths": {
+              "npm-asset-library": "vendor/npm",
+              "bower-asset-library": "vendor/bower"
+            }
+        },    
+        "process-timeout": 1800
+    },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "1.0-dev"
         }
-    },
-    "repositories": [
-        
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        }
-        
-    ]
+    }
 }
