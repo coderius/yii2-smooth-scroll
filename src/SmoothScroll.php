@@ -113,7 +113,6 @@ class SmoothScroll extends Widget
         $js[] = $this->registerClientEvents();
 
        $view->registerJs(implode("\n", array_filter($js)));
-        var_dump(implode("\n", $js));
     }
 
     private function registerClientObject()
@@ -166,7 +165,7 @@ class SmoothScroll extends Widget
     /**
      * Undocumented function
      *
-     * @param [type] $value
+     * @param [array|null] $value
      * @return void
      */
     private function animateScrollSmoothScroll($value)

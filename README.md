@@ -70,7 +70,7 @@ In section 'beginClientJs' and 'endClientJs' you can set any js code.
         'clientMethods' => [
             // Animate scrolling to an anchor.
             'animateScroll' => [
-                'anchor' => "document.querySelector('#tuc')",// numbel (y-position to scroll) or dom element
+                'anchor' => "document.querySelector('#anchor')",// numbel (y-position to scroll) or dom element
                 // 'toggle' => 700,
                 'options' => "{ speed: 1500, easing: 'easeOutCubic' }",
             ],
